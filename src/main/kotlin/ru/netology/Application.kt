@@ -21,10 +21,14 @@ import org.kodein.di.ktor.kodein
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import ru.netology.dto.ErrorResponseDto
+import ru.netology.repository.PostRepository
+import ru.netology.repository.PostRepositoryInMemoryWithMutexImpl
 import ru.netology.repository.UserRepository
 import ru.netology.repository.UserRepositoryInMemoryWithMutexImpl
 import ru.netology.route.RoutingV1
+import ru.netology.service.FileService
 import ru.netology.service.JWTTokenService
+import ru.netology.service.PostService
 import ru.netology.service.UserService
 
 fun main(args: Array<String>) {
@@ -69,6 +73,9 @@ fun Application.module() {
             ?: throw javax.naming.ConfigurationException("JWT Secret is not specified"))
         bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
         bind<JWTTokenService>() with eagerSingleton { JWTTokenService(instance(tag = "jwt-secret")) }
+        bind<PostRepository>() with eagerSingleton { PostRepositoryInMemoryWithMutexImpl() }
+        bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
+        bind<PostService>() with eagerSingleton { PostService(instance(), instance(), instance()) }
         bind<UserRepository>() with eagerSingleton { UserRepositoryInMemoryWithMutexImpl() }
         bind<UserService>() with eagerSingleton {
             UserService(instance(), instance(), instance()).apply {
@@ -77,6 +84,8 @@ fun Application.module() {
         bind<RoutingV1>() with eagerSingleton {
             RoutingV1(
                 instance(tag = "upload-dir"),
+                instance(),
+                instance(),
                 instance()
             )
         }
