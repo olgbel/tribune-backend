@@ -99,24 +99,25 @@ class RoutingV1(
 //                            call.respond(response)
 //                        }
 //
-//                        post("/like/{id}") {
-//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-//                                "id",
-//                                "Long"
-//                            )
-//                            val me = call.authentication.principal<UserModel>()
-//                            val response = me?.id?.let { it1 -> postService.likeById(id, it1) }
-//                            call.respond(response!!)
-//                        }
-//                        post("/dislike/{id}") {
-//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-//                                "id",
-//                                "Long"
-//                            )
-//                            val me = call.authentication.principal<UserModel>()
-//                            val response = me?.id?.let { it1 -> postService.dislikeById(id, it1) }
-//                            call.respond(response!!)
-//                        }
+                        post("/like/{id}") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val me = call.authentication.principal<UserModel>()
+                            val response = postService.likeById(id, me!!)
+                            call.respond(response)
+                        }
+
+                        post("/dislike/{id}") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val me = call.authentication.principal<UserModel>()
+                            val response = postService.dislikeById(id, me!!)
+                            call.respond(response)
+                        }
                     }
                 }
             }

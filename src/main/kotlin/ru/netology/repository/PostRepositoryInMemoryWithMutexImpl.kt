@@ -3,6 +3,7 @@ package ru.netology.repository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.netology.model.PostModel
+import ru.netology.model.UserModel
 
 class PostRepositoryInMemoryWithMutexImpl : PostRepository {
     private var nextId = 1L
@@ -19,7 +20,8 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
 
     override suspend fun getRecentPosts(): List<PostModel> {
         mutex.withLock {
-            return items.subList(Integer.max(items.lastIndex - 19, 0), items.lastIndex + 1).reversed()
+            return items.subList(Integer.max(items.lastIndex - 19, 0), items.lastIndex + 1)
+                .reversed()
         }
     }
 
@@ -30,17 +32,44 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
 ////    override suspend fun getPostsBefore(id: Long): List<PostModel> {
 ////        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 ////    }
-////
-////    override suspend fun save(item: PostModel): PostModel {
-////        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-////    }
-////
-////    override suspend fun likeById(id: Long, userId: Long): PostModel? {
-////        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-////    }
-////
-////    override suspend fun dislikeById(id: Long, userId: Long): PostModel? {
-////        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-////    }
+
+
+    override suspend fun likeById(id: Long, user: UserModel): PostModel? {
+        mutex.withLock {
+            return when (val index = items.indexOfFirst { it.id == id }) {
+                -1 -> null
+                else -> {
+                    val item = items[index]
+                    val copy = item.copy(likes = item.likes.plus(user.id))
+                    try {
+                        items[index] = copy
+                    } catch (e: ArrayIndexOutOfBoundsException) {
+                        println("size: ${items.size}")
+                        println(index)
+                    }
+                    copy
+                }
+            }
+        }
+    }
+
+    override suspend fun dislikeById(id: Long, user: UserModel): PostModel? {
+        mutex.withLock {
+            return when (val index = items.indexOfFirst { it.id == id }) {
+                -1 -> null
+                else -> {
+                    val item = items[index]
+                    val copy = item.copy(likes = item.likes.minus(user.id))
+                    try {
+                        items[index] = copy
+                    } catch (e: ArrayIndexOutOfBoundsException) {
+                        println("size: ${items.size}")
+                        println(index)
+                    }
+                    copy
+                }
+            }
+        }
+    }
 
 }

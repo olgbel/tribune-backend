@@ -36,19 +36,14 @@ class PostService(private val repo: PostRepository,
 //    suspend fun getPostsBefore(id: Long): List<PostResponseDto> {
 //        return repo.getPostsBefore(id).map { PostResponseDto.fromModel(it) }
 //    }
-//
-//    suspend fun likeById(postId: Long, user: UserModel): PostResponseDto {
-//        val model = repo.likeById(postId, userId) ?: throw NotFoundException()
-//        val likeText = if (model.content?.length ?: 0 > 15) model.content?.substring(0, 15) + "..." else model.content
-//        return PostResponseDto.fromModel()
-//
-//        userService.increasePromotes(user.id)
-//        recalcBadgeforUser()
-//        return PostResponseDto.fromModel(user, userService.getModelById(model.author)!!, model)
-//    }
-//
-//    suspend fun dislikeById(id: Long, userId: Long): PostResponseDto {
-//        val model = repo.dislikeById(id, userId) ?: throw NotFoundException()
-//        return PostResponseDto.fromModel(model)
-//    }
+
+    suspend fun likeById(postId: Long, user: UserModel): PostResponseDto {
+        val model = repo.likeById(postId, user) ?: throw NotFoundException()
+        return PostResponseDto.fromModel(user, model)
+    }
+
+    suspend fun dislikeById(id: Long, user: UserModel): PostResponseDto {
+        val model = repo.dislikeById(id, user) ?: throw NotFoundException()
+        return PostResponseDto.fromModel(user, model)
+    }
 }
