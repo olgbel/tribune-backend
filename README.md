@@ -5,7 +5,7 @@ curl -v -H "Content-Type: application/json" -X POST -d  "@loginData.json" http:/
 curl -v -H "Content-Type: application/json" -X POST -d  "@loginData.json" http://localhost:9999/api/v1/authentication
 
 GET всех постов
-curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.pm0YLuPpOLUKXs-9wwcgwzSI3Blytg1P4Mt9x4k-31w" http://localhost:9999/api/v1/posts/recent
+curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" http://localhost:9999/api/v1/posts/recent
 
 DELETE поста
 curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" -v -X DELETE http://localhost:9999/api/v1/posts/2

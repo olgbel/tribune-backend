@@ -3,7 +3,10 @@ package ru.netology.repository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.netology.model.PostModel
+import ru.netology.model.Reaction
+import ru.netology.model.ReactionType
 import ru.netology.model.UserModel
+import java.util.*
 
 class PostRepositoryInMemoryWithMutexImpl : PostRepository {
     private var nextId = 1L
@@ -46,7 +49,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(likes = item.likes.plus(user.id))
+                    val copy = item.copy(likes = item.likes.plus(Reaction(user.id, Date().time, ReactionType.LIKE)))
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {
@@ -65,7 +68,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(dislikes = item.dislikes.plus(user.id))
+                    val copy = item.copy(dislikes = item.dislikes.plus(Reaction(user.id, Date().time, ReactionType.DISLIKE)))
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {

@@ -5,8 +5,8 @@ data class PostModel(
     val author: UserModel,
     val content: String,
     val created: Long,
-    val likes: Set<Long> = setOf(),
-    val dislikes: Set<Long> = setOf(),
+    val likes: Set<Reaction> = setOf(),
+    val dislikes: Set<Reaction> = setOf(),
     val linkURL: String? = null,
     val attachment: AttachmentModel
 )

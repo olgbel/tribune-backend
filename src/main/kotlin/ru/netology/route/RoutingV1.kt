@@ -72,7 +72,7 @@ class RoutingV1(
                             val input = call.receive<PostRequestDto>()
                             val me = call.authentication.principal<UserModel>()
                             val response = postService.save(input, me!!)
-                            call.respond(response!!)
+                            call.respond(response)
                         }
 
                         get("/recent") {
