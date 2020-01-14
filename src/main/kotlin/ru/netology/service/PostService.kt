@@ -29,13 +29,13 @@ class PostService(private val repo: PostRepository,
         return repo.getRecentPosts().map { PostResponseDto.fromModel(user, it)}
     }
 
-//    suspend fun getPostsAfter(id: Long): List<PostResponseDto>  {
-//        return repo.getPostsAfter(id).map { PostResponseDto.fromModel(it) }
-//    }
-//
-//    suspend fun getPostsBefore(id: Long): List<PostResponseDto> {
-//        return repo.getPostsBefore(id).map { PostResponseDto.fromModel(it) }
-//    }
+    suspend fun getPostsAfter(user: UserModel, id: Long): List<PostResponseDto>  {
+        return repo.getPostsAfter(id).map { PostResponseDto.fromModel(user, it) }
+    }
+
+    suspend fun getPostsBefore(user: UserModel, id: Long): List<PostResponseDto> {
+        return repo.getPostsBefore(id).map { PostResponseDto.fromModel(user, it) }
+    }
 
     suspend fun likeById(postId: Long, user: UserModel): PostResponseDto {
         val model = repo.likeById(postId, user) ?: throw NotFoundException()

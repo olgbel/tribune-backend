@@ -25,13 +25,19 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
-////    override suspend fun getPostsAfter(id: Long): List<PostModel> {
-////        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-////    }
-////
-////    override suspend fun getPostsBefore(id: Long): List<PostModel> {
-////        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-////    }
+    override suspend fun getPostsAfter(id: Long): List<PostModel> {
+        mutex.withLock {
+            val filteredList = items.filter { it.id > id } as MutableList<PostModel>
+            return filteredList.reversed()
+        }
+    }
+
+    override suspend fun getPostsBefore(id: Long): List<PostModel> {
+        mutex.withLock {
+            val filteredList = items.filter { it.id < id } as MutableList<PostModel>
+            return filteredList.reversed()
+        }
+    }
 
 
     override suspend fun likeById(id: Long, user: UserModel): PostModel? {
