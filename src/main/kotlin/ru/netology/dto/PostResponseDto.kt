@@ -19,7 +19,7 @@ data class PostResponseDto(val id: Long,
             content = model.content,
             created = model.created,
             likes = model.likes,
-            dislikes = model.dilsikes,
+            dislikes = model.dislikes,
             linkURL = model.linkURL,
             attachment = model.attachment
         )

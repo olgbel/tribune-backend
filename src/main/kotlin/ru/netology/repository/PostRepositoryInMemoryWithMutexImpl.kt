@@ -59,7 +59,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(likes = item.likes.minus(user.id))
+                    val copy = item.copy(dislikes = item.dislikes.plus(user.id))
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {

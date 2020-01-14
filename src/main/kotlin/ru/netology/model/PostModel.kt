@@ -6,7 +6,7 @@ data class PostModel(
     val content: String,
     val created: Long,
     val likes: Set<Long> = setOf(),
-    val dilsikes: Set<Long> = setOf(),
+    val dislikes: Set<Long> = setOf(),
     val linkURL: String? = null,
     val attachment: AttachmentModel
 )
