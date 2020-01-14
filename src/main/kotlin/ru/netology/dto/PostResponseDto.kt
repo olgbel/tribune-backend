@@ -5,20 +5,21 @@ import ru.netology.model.PostModel
 import ru.netology.model.UserModel
 
 data class PostResponseDto(val id: Long,
-                           val author: UserModel,
+                           val author: UserResponseDto,
                            val content: String,
-                           val created: Int,
+                           val created: Long,
                            val likes: Set<Long> = setOf(),
                            val dislikes: Set<Long> = setOf(),
-                           val linkURL: String? = null,
+                           val linkURL: String?,
                            val attachment: AttachmentModel) {
     companion object {
-        fun fromModel(model: PostModel) = PostResponseDto(
+        fun fromModel(user: UserModel, model: PostModel) = PostResponseDto(
             id = model.id,
-            author = model.author,
+            author = UserResponseDto.fromModel(user),
             content = model.content,
             created = model.created,
             likes = model.likes,
+            dislikes = model.dilsikes,
             linkURL = model.linkURL,
             attachment = model.attachment
         )

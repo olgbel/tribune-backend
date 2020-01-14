@@ -71,51 +71,52 @@ class RoutingV1(
                         post {
                             val input = call.receive<PostRequestDto>()
                             val me = call.authentication.principal<UserModel>()
-//                            val response = me?.id?.let { it1 -> postService.save(input, it1, -1) }
-//                            call.respond(response!!)
+                            val response = postService.save(input, me!!)
+                            call.respond(response!!)
                         }
 
                         get("/recent") {
-                            val response = postService.getRecentPosts()
-                            call.respond(response)
-                        }
-
-                        get("/after/{id}") {
-                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-                                "id",
-                                "Long"
-                            )
-                            val response = postService.getPostsAfter(id)
-                            call.respond(response)
-                        }
-
-                        get("/before/{id}") {
-                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-                                "id",
-                                "Long"
-                            )
-                            val response = postService.getPostsBefore(id)
-                            call.respond(response)
-                        }
-
-                        post("/like/{id}") {
-                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-                                "id",
-                                "Long"
-                            )
                             val me = call.authentication.principal<UserModel>()
-                            val response = me?.id?.let { it1 -> postService.likeById(id, it1) }
-                            call.respond(response!!)
+                            val response = postService.getRecentPosts(me!!)
+                            call.respond(response)
                         }
-                        post("/dislike/{id}") {
-                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-                                "id",
-                                "Long"
-                            )
-                            val me = call.authentication.principal<UserModel>()
-                            val response = me?.id?.let { it1 -> postService.dislikeById(id, it1) }
-                            call.respond(response!!)
-                        }
+
+//                        get("/after/{id}") {
+//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+//                                "id",
+//                                "Long"
+//                            )
+//                            val response = postService.getPostsAfter(id)
+//                            call.respond(response)
+//                        }
+//
+//                        get("/before/{id}") {
+//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+//                                "id",
+//                                "Long"
+//                            )
+//                            val response = postService.getPostsBefore(id)
+//                            call.respond(response)
+//                        }
+//
+//                        post("/like/{id}") {
+//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+//                                "id",
+//                                "Long"
+//                            )
+//                            val me = call.authentication.principal<UserModel>()
+//                            val response = me?.id?.let { it1 -> postService.likeById(id, it1) }
+//                            call.respond(response!!)
+//                        }
+//                        post("/dislike/{id}") {
+//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+//                                "id",
+//                                "Long"
+//                            )
+//                            val me = call.authentication.principal<UserModel>()
+//                            val response = me?.id?.let { it1 -> postService.dislikeById(id, it1) }
+//                            call.respond(response!!)
+//                        }
                     }
                 }
             }

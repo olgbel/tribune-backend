@@ -4,7 +4,7 @@ data class PostModel(
     val id: Long = -1,
     val author: UserModel,
     val content: String,
-    val created: Int = (System.currentTimeMillis() / 1000).toInt(),
+    val created: Long,
     val likes: Set<Long> = setOf(),
     val dilsikes: Set<Long> = setOf(),
     val linkURL: String? = null,

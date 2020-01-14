@@ -75,7 +75,7 @@ fun Application.module() {
         bind<JWTTokenService>() with eagerSingleton { JWTTokenService(instance(tag = "jwt-secret")) }
         bind<PostRepository>() with eagerSingleton { PostRepositoryInMemoryWithMutexImpl() }
         bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
-        bind<PostService>() with eagerSingleton { PostService(instance(), instance(), instance()) }
+        bind<PostService>() with eagerSingleton { PostService(instance(), instance()) }
         bind<UserRepository>() with eagerSingleton { UserRepositoryInMemoryWithMutexImpl() }
         bind<UserService>() with eagerSingleton {
             UserService(instance(), instance(), instance()).apply {
