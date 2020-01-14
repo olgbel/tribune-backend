@@ -81,24 +81,26 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-//                        get("/after/{id}") {
-//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-//                                "id",
-//                                "Long"
-//                            )
-//                            val response = postService.getPostsAfter(id)
-//                            call.respond(response)
-//                        }
-//
-//                        get("/before/{id}") {
-//                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-//                                "id",
-//                                "Long"
-//                            )
-//                            val response = postService.getPostsBefore(id)
-//                            call.respond(response)
-//                        }
-//
+                        get("/after/{id}") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val me = call.authentication.principal<UserModel>()
+                            val response = postService.getPostsAfter(me!!, id)
+                            call.respond(response)
+                        }
+
+                        get("/before/{id}") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val me = call.authentication.principal<UserModel>()
+                            val response = postService.getPostsBefore(me!!, id)
+                            call.respond(response)
+                        }
+
                         post("/like/{id}") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
