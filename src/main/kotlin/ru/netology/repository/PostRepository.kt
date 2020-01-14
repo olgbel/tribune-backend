@@ -1,5 +1,6 @@
 package ru.netology.repository
 
+import ru.netology.dto.UserResponseDto
 import ru.netology.model.PostModel
 import ru.netology.model.UserModel
 
@@ -9,6 +10,6 @@ interface PostRepository {
     suspend fun getRecentPosts(): List<PostModel>
     suspend fun getPostsAfter(id: Long): List<PostModel>
     suspend fun getPostsBefore(id: Long): List<PostModel>
-    suspend fun likeById(id: Long, user: UserModel): PostModel?
-    suspend fun dislikeById(id: Long, user: UserModel): PostModel?
+    suspend fun likeById(id: Long, user: UserResponseDto): PostModel?
+    suspend fun dislikeById(id: Long, user: UserResponseDto): PostModel?
 }

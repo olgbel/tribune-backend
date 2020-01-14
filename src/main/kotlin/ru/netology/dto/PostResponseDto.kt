@@ -24,9 +24,9 @@ data class PostResponseDto(
             content = model.content,
             created = model.created,
             likes = model.likes,
-            isLikedByMe = model.likes.any { it.userId == currentUser.id },
+            isLikedByMe = model.likes.any { it.user.id == currentUser.id },
             dislikes = model.dislikes,
-            isDislikedByMe = model.dislikes.any { it.userId == currentUser.id },
+            isDislikedByMe = model.dislikes.any { it.user.id == currentUser.id },
             linkURL = model.linkURL,
             attachment = model.attachment
         )

@@ -4,6 +4,7 @@ import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
 import ru.netology.dto.PostRequestDto
 import ru.netology.dto.PostResponseDto
+import ru.netology.dto.UserResponseDto
 import ru.netology.model.PostModel
 import ru.netology.model.UserModel
 import ru.netology.repository.PostRepository
@@ -39,12 +40,12 @@ class PostService(private val repo: PostRepository,
     }
 
     suspend fun likeById(postId: Long, user: UserModel): PostResponseDto {
-        val model = repo.likeById(postId, user) ?: throw NotFoundException()
+        val model = repo.likeById(postId, UserResponseDto.fromModel(user)) ?: throw NotFoundException()
         return PostResponseDto.fromModel(user, userService.getModelById(model.author.id)!!, model)
     }
 
     suspend fun dislikeById(id: Long, user: UserModel): PostResponseDto {
-        val model = repo.dislikeById(id, user) ?: throw NotFoundException()
+        val model = repo.dislikeById(id, UserResponseDto.fromModel(user)) ?: throw NotFoundException()
         return PostResponseDto.fromModel(user, userService.getModelById(model.author.id)!!, model)
     }
 }

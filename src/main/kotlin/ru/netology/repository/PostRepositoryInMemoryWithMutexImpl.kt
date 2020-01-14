@@ -2,6 +2,7 @@ package ru.netology.repository
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import ru.netology.dto.UserResponseDto
 import ru.netology.model.PostModel
 import ru.netology.model.Reaction
 import ru.netology.model.ReactionType
@@ -43,13 +44,13 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
     }
 
 
-    override suspend fun likeById(id: Long, user: UserModel): PostModel? {
+    override suspend fun likeById(id: Long, user: UserResponseDto): PostModel? {
         mutex.withLock {
             return when (val index = items.indexOfFirst { it.id == id }) {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(likes = item.likes.plus(Reaction(user.id, Date().time, ReactionType.LIKE)))
+                    val copy = item.copy(likes = item.likes.plus(Reaction(user, Date().time, ReactionType.LIKE)))
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {
@@ -62,13 +63,13 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
-    override suspend fun dislikeById(id: Long, user: UserModel): PostModel? {
+    override suspend fun dislikeById(id: Long, user: UserResponseDto): PostModel? {
         mutex.withLock {
             return when (val index = items.indexOfFirst { it.id == id }) {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(dislikes = item.dislikes.plus(Reaction(user.id, Date().time, ReactionType.DISLIKE)))
+                    val copy = item.copy(dislikes = item.dislikes.plus(Reaction(user, Date().time, ReactionType.DISLIKE)))
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {

@@ -120,6 +120,14 @@ class RoutingV1(
                             val response = postService.dislikeById(id, me!!)
                             call.respond(response)
                         }
+
+                        get("reactions/{id}"){
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+
+                        }
                     }
                 }
             }
