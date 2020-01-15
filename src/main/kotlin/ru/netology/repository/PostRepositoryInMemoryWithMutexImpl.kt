@@ -10,6 +10,7 @@ import ru.netology.model.UserModel
 import java.util.*
 
 class PostRepositoryInMemoryWithMutexImpl : PostRepository {
+
     private var nextId = 1L
     private val mutex = Mutex()
     private val items = mutableListOf<PostModel>()
@@ -77,6 +78,18 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                         println(index)
                     }
                     copy
+                }
+            }
+        }
+    }
+
+    override suspend fun getReactionsById(postId: Long): List<Reaction> {
+        mutex.withLock {
+            return when (val index = items.indexOfFirst { it.id == postId }) {
+                -1 -> emptyList()
+                else -> {
+                    val item = items[index]
+                    item.likes.plus(item.dislikes).toList()
                 }
             }
         }

@@ -21,3 +21,10 @@ curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.
 
 REPOST
 curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" -v -H "Content-Type: application/json" -X POST -d  "@data.json" http://localhost:9999/api/v1/posts/repost/1
+
+GET reactions by postID
+curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" http://localhost:9999/api/v1/posts/reactions/1
+
+LIKE post
+curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" -v -H "Content-Type: application/json" -X POST -d  http://localhost:9999/api/v1/posts/like/1
+

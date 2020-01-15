@@ -126,6 +126,8 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
+                            val response = postService.getReactionsById(id)
+                            call.respond(response)
 
                         }
                     }
