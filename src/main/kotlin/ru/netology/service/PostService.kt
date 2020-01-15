@@ -60,4 +60,8 @@ class PostService(
     suspend fun getReactionsById(id: Long): List<ReactionResponseDto> {
         return repo.getReactionsById(id).map { ReactionResponseDto.fromModel(it) }
     }
+
+    suspend fun getPostsByUserId(currentUser: UserModel, userId: Long): List<PostResponseDto> {
+        return repo.getPostsByUserId(userId).map { PostResponseDto.fromModel(currentUser, currentUser, it) }
+    }
 }

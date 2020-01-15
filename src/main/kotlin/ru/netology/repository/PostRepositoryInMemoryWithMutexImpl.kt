@@ -95,4 +95,10 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
+    override suspend fun getPostsByUserId(userId: Long): List<PostModel>{
+        mutex.withLock {
+            return items.filter { it.author.id == userId }
+        }
+    }
+
 }
