@@ -9,15 +9,9 @@ import io.ktor.http.content.static
 import io.ktor.request.receive
 import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
+import io.ktor.routing.*
 import io.ktor.util.KtorExperimentalAPI
-import ru.netology.dto.AuthenticationRequestDto
-import ru.netology.dto.PostRequestDto
-import ru.netology.dto.RegistrationRequestDto
-import ru.netology.dto.UserResponseDto
+import ru.netology.dto.*
 import ru.netology.model.UserModel
 import ru.netology.service.FileService
 import ru.netology.service.PostService
@@ -67,6 +61,14 @@ class RoutingV1(
                         }
                     }
 
+                    route("/update/user"){
+                        put {
+                            val input = call.receive<UserRequestDto>()
+                            val response = userService.update(input)
+                            call.respond(response)
+                        }
+                    }
+
                     route("/posts") {
                         post {
                             val input = call.receive<PostRequestDto>()
@@ -77,7 +79,9 @@ class RoutingV1(
 
                         get("/recent") {
                             val me = call.authentication.principal<UserModel>()
-                            val response = postService.getRecentPosts(me!!)
+                            println("me: $me")
+                            val currentUser = userService.getModelById(me!!.id)
+                            val response = postService.getRecentPosts(currentUser!!)
                             call.respond(response)
                         }
 

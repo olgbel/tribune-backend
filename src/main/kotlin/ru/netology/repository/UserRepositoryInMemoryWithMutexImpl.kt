@@ -42,11 +42,26 @@ class UserRepositoryInMemoryWithMutexImpl : UserRepository {
                     copy
                 }
                 else -> {
-                    val copy = items[index].copy(username = item.username, password = item.password, token = item.token)
+                    val copy = items[index].copy(
+                        username = item.username,
+                        password = item.password,
+                        token = item.token,
+                        avatar = item.avatar
+                    )
                     items[index] = copy
                     copy
                 }
             }
+        }
+    }
+
+    override suspend fun update(item: UserModel): UserModel {
+        mutex.withLock {
+            val user = items.find { it.id == item.id }
+            val index = items.indexOfFirst { it.id == user?.id }
+            val copy = items[index].copy(avatar = item.avatar)
+            items[index] = copy
+            return copy
         }
     }
 }

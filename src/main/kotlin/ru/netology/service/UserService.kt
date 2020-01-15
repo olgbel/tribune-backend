@@ -68,6 +68,13 @@ class UserService(
         }
     }
 
+    suspend fun update(input: UserRequestDto) {
+        mutex.withLock {
+            val user = repo.getById(input.userId)
+            repo.update(UserModel(id = input.userId, username = user!!.username, avatar = input.attachment, password = user.password))
+        }
+    }
+
     suspend fun saveToken(user: UserModel, input: PushRequestParamsDto) {
         mutex.withLock {
             val copy = user.copy(token = PushToken(input.token))
