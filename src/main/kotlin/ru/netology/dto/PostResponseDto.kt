@@ -18,9 +18,9 @@ data class PostResponseDto(
     val attachment: AttachmentModel
 ) {
     companion object {
-        fun fromModel(currentUser: UserModel, user: UserModel, model: PostModel) = PostResponseDto(
+        fun fromModel(currentUser: UserModel, postAuthor: UserModel, model: PostModel) = PostResponseDto(
             id = model.id,
-            author = UserResponseDto.fromModel(model.author),
+            author = UserResponseDto.fromModel(postAuthor),
             content = model.content,
             created = model.created,
             likes = model.likes,

@@ -32,7 +32,13 @@ class PostService(
     }
 
     suspend fun getRecentPosts(currentUser: UserModel): List<PostResponseDto> {
-        return repo.getRecentPosts().map { PostResponseDto.fromModel(currentUser, currentUser, it) }
+        return repo.getRecentPosts().map {
+            println("it: $it")
+            println("currentUser: $currentUser")
+            val postAuthor = userService.getModelById(it.id)
+            println("postAuthor: $postAuthor")
+            PostResponseDto.fromModel(currentUser, postAuthor!!, it)
+        }
     }
 
     suspend fun getPostsAfter(currentUser: UserModel, id: Long): List<PostResponseDto> {
@@ -62,6 +68,7 @@ class PostService(
     }
 
     suspend fun getPostsByUserId(currentUser: UserModel, userId: Long): List<PostResponseDto> {
-        return repo.getPostsByUserId(userId).map { PostResponseDto.fromModel(currentUser, currentUser, it) }
+        return repo.getPostsByUserId(userId)
+            .map { PostResponseDto.fromModel(currentUser, currentUser, it) }
     }
 }

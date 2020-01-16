@@ -4,5 +4,5 @@ import ru.netology.model.AttachmentModel
 
 data class UserRequestDto (
     val userId: Long,
-    val attachment: AttachmentModel
+    val avatar: AttachmentModel
 )

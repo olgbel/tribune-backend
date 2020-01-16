@@ -64,6 +64,7 @@ class RoutingV1(
                     route("/update/user"){
                         put {
                             val input = call.receive<UserRequestDto>()
+                            println("input: $input")
                             val response = userService.update(input)
                             call.respond(response)
                         }
