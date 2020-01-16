@@ -59,7 +59,7 @@ class UserRepositoryInMemoryWithMutexImpl : UserRepository {
         mutex.withLock {
             val user = items.find { it.id == item.id }
             val index = items.indexOfFirst { it.id == user?.id }
-            val copy = items[index].copy(avatar = item.avatar)
+            val copy = items[index].copy(avatar = item.avatar, isReadOnly = item.isReadOnly)
             items[index] = copy
             return copy
         }

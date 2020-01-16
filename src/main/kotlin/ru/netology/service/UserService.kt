@@ -55,7 +55,12 @@ class UserService(
         mutex.withLock {
             if (repo.getByUsername(input.username) != null) throw BadRequestException("Пользователь с таким логином уже зарегистрирован")
             val model =
-                repo.save(UserModel(username = input.username, password = passwordEncoder.encode(input.password)))
+                repo.save(
+                    UserModel(
+                        username = input.username,
+                        password = passwordEncoder.encode(input.password)
+                    )
+                )
             val token = tokenService.generate(model.id)
             return AuthenticationResponseDto(token)
         }
@@ -71,7 +76,28 @@ class UserService(
     suspend fun update(input: UserRequestDto) {
         mutex.withLock {
             val user = repo.getById(input.userId)
-            repo.update(UserModel(id = input.userId, username = user!!.username, avatar = input.avatar, password = user.password))
+            repo.update(
+                UserModel(
+                    id = input.userId,
+                    username = user!!.username,
+                    avatar = input.avatar,
+                    password = user.password
+                )
+            )
+        }
+    }
+
+    suspend fun setReadOnly(user: UserModel, isReadOnly: Boolean): UserModel {
+        mutex.withLock {
+            return repo.update(
+                UserModel(
+                    id = user.id,
+                    username = user.username,
+                    avatar = user.avatar,
+                    password = user.password,
+                    isReadOnly = isReadOnly
+                )
+            )
         }
     }
 

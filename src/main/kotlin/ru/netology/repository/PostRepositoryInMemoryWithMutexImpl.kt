@@ -6,7 +6,6 @@ import ru.netology.dto.UserResponseDto
 import ru.netology.model.PostModel
 import ru.netology.model.Reaction
 import ru.netology.model.ReactionType
-import ru.netology.model.UserModel
 import java.util.*
 
 class PostRepositoryInMemoryWithMutexImpl : PostRepository {
