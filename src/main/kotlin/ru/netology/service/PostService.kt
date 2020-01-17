@@ -33,7 +33,7 @@ class PostService(
 
     suspend fun getRecentPosts(currentUser: UserModel): List<PostResponseDto> {
         return repo.getRecentPosts().map {
-            val postAuthor = userService.getModelById(it.id)
+            val postAuthor = userService.getModelById(it.author.id)
             PostResponseDto.fromModel(currentUser, postAuthor!!, it)
         }
     }

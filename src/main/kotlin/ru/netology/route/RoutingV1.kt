@@ -80,7 +80,6 @@ class RoutingV1(
 
                         get("/recent") {
                             val me = call.authentication.principal<UserModel>()
-                            println("me: $me")
                             val currentUser = userService.getModelById(me!!.id)
                             val response = postService.getRecentPosts(currentUser!!)
                             call.respond(response)
