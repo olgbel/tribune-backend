@@ -14,7 +14,7 @@ GET определённого поста
 curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" http://localhost:9999/api/v1/posts/1
 
 CREATE поста
-curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MTwiw7lL_X_KZyw84vBBcePuJwo0SXwvH1ipjl5aIVY" -v -H "Content-Type: application/json" -X POST -d  "@postData.json" http://localhost:9999/api/v1/posts
+curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" -v -H "Content-Type: application/json" -X POST -d  "@postData.json" http://localhost:9999/api/v1/posts
 
 UPDATE POST
 curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" -H "Content-Type: application/json" -X PUT -d "@data.json"  http://localhost:9999/api/v1/posts/1
@@ -32,4 +32,4 @@ GET posts by userID
 curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" http://localhost:9999/api/v1/posts/user/1
 
 GET me
-curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MTwiw7lL_X_KZyw84vBBcePuJwo0SXwvH1ipjl5aIVY" http://localhost:9999/api/v1/me
+curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.fdPwJPbRZHI2cv23H5DktbDkm5rPE8_Zy1Crr2iCX6g" http://localhost:9999/api/v1/me

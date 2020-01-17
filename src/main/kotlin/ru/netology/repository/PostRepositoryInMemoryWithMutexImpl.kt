@@ -6,6 +6,7 @@ import ru.netology.dto.UserResponseDto
 import ru.netology.model.PostModel
 import ru.netology.model.Reaction
 import ru.netology.model.ReactionType
+import ru.netology.model.UserModel
 import java.util.*
 
 class PostRepositoryInMemoryWithMutexImpl : PostRepository {
@@ -21,6 +22,14 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
             return copy
         }
     }
+
+    override suspend fun getPostById(postId: Long): PostModel {
+        mutex.withLock {
+            val index = items.indexOfFirst { it.id == postId }
+            return items[index]
+        }
+    }
+
 
     override suspend fun getRecentPosts(): List<PostModel> {
         mutex.withLock {
@@ -50,7 +59,16 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(likes = item.likes.plus(Reaction(user, Date().time, ReactionType.LIKE)))
+                    println("repo item: $item")
+                    val copy = item.copy(
+                        likes = item.likes.plus(
+                            Reaction(
+                                user,
+                                Date().time,
+                                ReactionType.LIKE
+                            )
+                        )
+                    )
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {
@@ -69,7 +87,15 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(dislikes = item.dislikes.plus(Reaction(user, Date().time, ReactionType.DISLIKE)))
+                    val copy = item.copy(
+                        dislikes = item.dislikes.plus(
+                            Reaction(
+                                user,
+                                Date().time,
+                                ReactionType.DISLIKE
+                            )
+                        )
+                    )
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {
@@ -94,9 +120,21 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
-    override suspend fun getPostsByUserId(userId: Long): List<PostModel>{
+    override suspend fun getPostsByUserId(userId: Long): List<PostModel> {
         mutex.withLock {
             return items.filter { it.author.id == userId }
+        }
+    }
+
+    override suspend fun updatePostAuthor(author: UserModel): List<PostModel> {
+        mutex.withLock {
+            val posts = items.filter { it.author.id == author.id }
+            posts.forEach {
+                val copy = it.copy(author = author)
+                val index = items.indexOf(it)
+                items[index] = copy
+            }
+            return items
         }
     }
 

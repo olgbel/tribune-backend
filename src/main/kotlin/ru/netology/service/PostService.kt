@@ -33,10 +33,7 @@ class PostService(
 
     suspend fun getRecentPosts(currentUser: UserModel): List<PostResponseDto> {
         return repo.getRecentPosts().map {
-            println("it: $it")
-            println("currentUser: $currentUser")
             val postAuthor = userService.getModelById(it.id)
-            println("postAuthor: $postAuthor")
             PostResponseDto.fromModel(currentUser, postAuthor!!, it)
         }
     }
@@ -55,29 +52,31 @@ class PostService(
         val model =
             repo.likeById(postId, UserResponseDto.fromModel(user)) ?: throw NotFoundException()
 
-        val userPosts = repo.getPostsByUserId(model.author.id)
-        val isNotReadOnly = userPosts.none { it.dislikes.size > 5 && it.likes.isEmpty() }
-
-        val postAuthor =
+        val isNotReadOnly = repo.getPostsByUserId(model.author.id)
+            .none { it.dislikes.size > 2 && it.likes.isEmpty() }
+        var postAuthor = model.author
             if (isNotReadOnly && model.author.isReadOnly) {
-                userService.setReadOnly(model.author, false)
-            } else {
-                model.author
+                postAuthor = userService.setReadOnly(model.author, false)
+                repo.updatePostAuthor(postAuthor)
             }
-        return PostResponseDto.fromModel(user, userService.getModelById(postAuthor.id)!!, model)
+        return PostResponseDto.fromModel(user, userService.getModelById(postAuthor.id)!!, repo.getPostById(model.id))
     }
 
     suspend fun dislikeById(id: Long, user: UserModel): PostResponseDto {
         val model =
             repo.dislikeById(id, UserResponseDto.fromModel(user)) ?: throw NotFoundException()
 
-        val postAuthor =
-            if (model.dislikes.size > 5 && model.likes.isEmpty()) {
-                userService.setReadOnly(model.author, true)
-            } else {
-                model.author
-            }
-        return PostResponseDto.fromModel(user, userService.getModelById(postAuthor.id)!!, model)
+        var postAuthor = model.author
+        if (model.dislikes.size > 2 && model.likes.isEmpty()) {
+            postAuthor = userService.setReadOnly(model.author, true)
+            repo.updatePostAuthor(postAuthor)
+        }
+
+        return PostResponseDto.fromModel(
+            user,
+            userService.getModelById(postAuthor.id)!!,
+            repo.getPostById(model.id)
+        )
     }
 
     suspend fun getReactionsById(id: Long): List<ReactionResponseDto> {
