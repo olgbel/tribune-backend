@@ -53,7 +53,7 @@ class PostService(
             repo.likeById(postId, UserResponseDto.fromModel(user)) ?: throw NotFoundException()
 
         val isNotReadOnly = repo.getPostsByUserId(model.author.id)
-            .none { it.dislikes.size > 2 && it.likes.isEmpty() }
+            .none { it.dislikes.size > 5 && it.likes.isEmpty() }
         var postAuthor = model.author
             if (isNotReadOnly && model.author.isReadOnly) {
                 postAuthor = userService.setReadOnly(model.author, false)
@@ -67,7 +67,7 @@ class PostService(
             repo.dislikeById(id, UserResponseDto.fromModel(user)) ?: throw NotFoundException()
 
         var postAuthor = model.author
-        if (model.dislikes.size > 2 && model.likes.isEmpty()) {
+        if (model.dislikes.size > 5 && model.likes.isEmpty()) {
             postAuthor = userService.setReadOnly(model.author, true)
             repo.updatePostAuthor(postAuthor)
         }
