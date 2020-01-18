@@ -59,7 +59,6 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    println("repo item: $item")
                     val copy = item.copy(
                         likes = item.likes.plus(
                             Reaction(
