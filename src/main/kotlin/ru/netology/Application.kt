@@ -26,10 +26,8 @@ import ru.netology.repository.PostRepositoryInMemoryWithMutexImpl
 import ru.netology.repository.UserRepository
 import ru.netology.repository.UserRepositoryInMemoryWithMutexImpl
 import ru.netology.route.RoutingV1
-import ru.netology.service.FileService
-import ru.netology.service.JWTTokenService
-import ru.netology.service.PostService
-import ru.netology.service.UserService
+import ru.netology.service.*
+import javax.naming.ConfigurationException
 
 fun main(args: Array<String>) {
     EngineMain.main(args)
@@ -68,18 +66,32 @@ fun Application.module() {
 
     install(KodeinFeature) {
         constant(tag = "upload-dir") with (environment.config.propertyOrNull("crud.upload.dir")?.getString()
-            ?: throw javax.naming.ConfigurationException("Upload dir is not specified"))
+            ?: throw ConfigurationException("Upload dir is not specified"))
         constant(tag = "jwt-secret") with (environment.config.propertyOrNull("crud.jwt.secret")?.getString()
-            ?: throw javax.naming.ConfigurationException("JWT Secret is not specified"))
+            ?: throw ConfigurationException("JWT Secret is not specified"))
+        constant(tag = "fcm-password") with (environment.config.propertyOrNull("crud.fcm.password")?.getString()
+            ?: throw ConfigurationException("FCM Password is not specified"))
+        constant(tag = "fcm-salt") with (environment.config.propertyOrNull("crud.fcm.salt")?.getString()
+            ?: throw ConfigurationException("FCM Salt is not specified"))
+        constant(tag = "fcm-db-url") with (environment.config.propertyOrNull("crud.fcm.db-url")?.getString()
+            ?: throw ConfigurationException("FCM DB Url is not specified"))
         bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
         bind<JWTTokenService>() with eagerSingleton { JWTTokenService(instance(tag = "jwt-secret")) }
         bind<PostRepository>() with eagerSingleton { PostRepositoryInMemoryWithMutexImpl() }
         bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
-        bind<PostService>() with eagerSingleton { PostService(instance(), instance()) }
+        bind<PostService>() with eagerSingleton { PostService(instance(), instance(), instance(), instance()) }
         bind<UserRepository>() with eagerSingleton { UserRepositoryInMemoryWithMutexImpl() }
         bind<UserService>() with eagerSingleton {
             UserService(instance(), instance(), instance()).apply {
             }
+        }
+        bind<FCMService>() with eagerSingleton {
+            FCMService(
+                instance(tag = "fcm-db-url"),
+                instance(tag = "fcm-password"),
+                instance(tag = "fcm-salt")//,
+//                instance(tag = "fcm-path")
+            )
         }
         bind<RoutingV1>() with eagerSingleton {
             RoutingV1(

@@ -10,12 +10,15 @@ import ru.netology.model.PostModel
 import ru.netology.model.Reaction
 import ru.netology.model.UserModel
 import ru.netology.repository.PostRepository
+import ru.netology.repository.UserRepository
 import java.util.*
 
 @KtorExperimentalAPI
 class PostService(
     private val repo: PostRepository,
-    private val userService: UserService
+    private val repoUser: UserRepository,
+    private val userService: UserService,
+    private val fcmService: FCMService
 ) {
 
     suspend fun save(input: PostRequestDto, user: UserModel): PostResponseDto {
@@ -59,6 +62,10 @@ class PostService(
                 postAuthor = userService.setReadOnly(model.author, false)
                 repo.updatePostAuthor(postAuthor)
             }
+        val likeText = if (model.content.length ?: 0 > 15) model.content.substring(0, 15) + "..." else model.content
+        if (user.id != postAuthor.id){
+            sendSimplePush(model.author, "Your post liked", "${user.username} одобрил ваше сообщение '${likeText}'")
+        }
         return PostResponseDto.fromModel(user, userService.getModelById(postAuthor.id)!!, repo.getPostById(model.id))
     }
 
@@ -70,6 +77,11 @@ class PostService(
         if (model.dislikes.size > 5 && model.likes.isEmpty()) {
             postAuthor = userService.setReadOnly(model.author, true)
             repo.updatePostAuthor(postAuthor)
+        }
+
+        val dislikeText = if (model.content.length ?: 0 > 15) model.content.substring(0, 15) + "..." else model.content
+        if (user.id != postAuthor.id){
+            sendSimplePush(model.author, "Your post disliked", "${user.username} не одобрил ваше сообщение '${dislikeText}'")
         }
 
         return PostResponseDto.fromModel(
@@ -86,5 +98,11 @@ class PostService(
     suspend fun getPostsByUserId(currentUser: UserModel, userId: Long): List<PostResponseDto> {
         return repo.getPostsByUserId(userId)
             .map { PostResponseDto.fromModel(currentUser, currentUser, it) }
+    }
+
+    private suspend fun sendSimplePush(user: UserModel, title: String, text: String) {
+        if (user.token != null) {
+            fcmService.send(user.id, user.token.token, title, text)
+        }
     }
 }

@@ -53,6 +53,15 @@ class RoutingV1(
                         }
                     }
 
+                    route("/token") {
+                        post {
+                            val input = call.receive<PushRequestParamsDto>()
+                            val me = call.authentication.principal<UserModel>()
+                            val response = userService.saveToken(me!!, input)
+                            call.respond(response)
+                        }
+                    }
+
                     route("/media") {
                         post {
                             val multipart = call.receiveMultipart()
