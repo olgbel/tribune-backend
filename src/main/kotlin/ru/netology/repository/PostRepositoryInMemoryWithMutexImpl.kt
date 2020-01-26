@@ -33,7 +33,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
 
     override suspend fun getRecentPosts(): List<PostModel> {
         mutex.withLock {
-            return items.subList(Integer.max(items.lastIndex - 19, 0), items.lastIndex + 1)
+            return items.subList(Integer.max(items.lastIndex - 19, 0), items.size)
                 .reversed()
         }
     }
@@ -68,12 +68,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                             )
                         )
                     )
-                    try {
-                        items[index] = copy
-                    } catch (e: ArrayIndexOutOfBoundsException) {
-                        println("size: ${items.size}")
-                        println(index)
-                    }
+                    items[index] = copy
                     copy
                 }
             }
@@ -95,12 +90,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                             )
                         )
                     )
-                    try {
-                        items[index] = copy
-                    } catch (e: ArrayIndexOutOfBoundsException) {
-                        println("size: ${items.size}")
-                        println(index)
-                    }
+                    items[index] = copy
                     copy
                 }
             }
